@@ -9,7 +9,7 @@ with open("README.md", "r") as readme:
 
 setup(
     name="pakk",
-    version="0.1.1",
+    version="1.0.0",
     author="Tristen Horton",
     author_email="tristen@tristenhorton.com",
     description="A package for encrypting and packing files into a single uncompressed file.",
