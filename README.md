@@ -2,9 +2,65 @@
 
 Encrypt and pack several files or folders into a single invokable file.
 
+This package comes equipped with a CLI tool and a simple library for working with pakk files. See the sections below regarding each.
+
 ## CLI
 
-## Package
+The pakk CLI tool has two subcommands: `pakk` and `unpakk`. Here are their help outputs:
+
+```
+$ pakk pakk --help
+usage: pakk pakk [-h] [-o OUTPUT] [-p PASSWORD] [-c CHUNKSIZE] input
+
+Encrypts the contents of a specified folder and packs the encrypted content
+into a single pakk.
+
+positional arguments:
+  input                 input folder to encrypt and pakk.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o OUTPUT, --output OUTPUT
+                        output path of the pakk file.
+  -p PASSWORD, --password PASSWORD
+                        password used to encrypt the contents of the pakk.
+                        Defaults to 'IsPakked'. It is HIGHLY recommended that
+                        you supply your own secure password with high entropy
+                        for each pakk.
+  -c CHUNKSIZE, --chunksize CHUNKSIZE
+                        maximum amount of bytes to encrypt at once when
+                        pakking files in the folder. Must be an integer
+                        multiple of 1024. Defaults to 64*1024
+```
+
+```
+$ pakk unpakk --help
+usage: pakk unpakk [-h] [-o OUTPUT] [-p PASSWORD] [-c CHUNKSIZE] input
+
+Decrypts the contents of a specified pakk and unpacks it into an identical
+folder structure as was originally packed.
+
+positional arguments:
+  input                 input pakk file to decrypt and unpakk.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o OUTPUT, --output OUTPUT
+                        path of the folder to output the pakk contents to.
+  -p PASSWORD, --password PASSWORD
+                        password used to decrypt the contents of the pakk.
+                        Must be the same password used when the pakk was
+                        created, otherwise decryption will fail. Defaults to
+                        'IsPakked'. It is HIGHLY recommended that you supply
+                        your own secure password with high entropy for each
+                        pakk.
+  -c CHUNKSIZE, --chunksize CHUNKSIZE
+                        maximum amount of bytes to decrypt at once when
+                        unpakking files in the folder. Must be an integer
+                        multiple of 1024. Defaults to 24*1024
+```
+
+## Library
 
 pakk provides a [few functions and types](#API) for working with pakk buffers and files. In most use cases, `pakk_files` and `unpakk` are used to create pakk files and access data from pakk files.
 
