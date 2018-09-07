@@ -4,6 +4,42 @@ Encrypt and pack several files or folders into a single invokable file.
 
 This package comes equipped with a CLI tool and a simple library for working with pakk files. See the sections below regarding each.
 
+## Getting Started
+
+Pakk is built to work on Python 3.6 and above.
+
+Install:
+```sh
+$ python3 -m pip install pakk
+```
+
+Using the CLI:
+```sh
+# pakk 'somefile.txt' and all the files in './somefolder' into 'files.pakk'
+# encrypting with the password 'kitty'
+$ pakk pakk -o files.pakk -p kitty somefile.txt ./somefolder
+
+# unpakk 'files.pakk' into all the original files
+$ pakk unpakk -o . -p kitty files.pakk
+```
+
+Using the library:
+```py
+import hashlib
+import pakk
+
+# encrypt with the password 'kitty'
+password = "kitty"
+key = hashlib.sha256(password.encode("utf-8")).digest()
+
+# pakk 'somefile.txt' and all the files in './somefolder' into 'files.pakk'
+with open("./files.pakk", "wb") as out_file:
+    pakk_files(key, ["files.pakk", "./somefolder"], out_file)
+
+# unpakk `files.pakk` into all the original files
+unpakk_files(key, "./files.pakk")
+```
+
 ## CLI
 
 The pakk CLI tool has two subcommands: `pakk` and `unpakk`. Here are their help outputs:
@@ -68,30 +104,30 @@ pakk provides a [few functions and types](#API) for working with pakk buffers an
 
 Keys should be AES-compatible and are typically bytes-like objects:
 ```py
-    import hashlib
+import hashlib
 
-    password = "kitty"
-    key = hashlib.sha256(password.encode("utf-8")).digest()
+password = "kitty"
+key = hashlib.sha256(password.encode("utf-8")).digest()
 ```
 
 You can pakk a single file using `pakk_files`:
 ```py
-    with open("./outputfile.pakk", "wb") as out_file:
-        pakk_files(key, ["./some/file"], out_file)
+with open("./outputfile.pakk", "wb") as out_file:
+    pakk_files(key, ["./some/file"], out_file)
 ```
 
 And to unpakk back into files, use `unpakk_files`:
 ```py
-    unpakk_files(key, "./outputfile.pakk")
+unpakk_files(key, "./outputfile.pakk")
 ```
 
 If you want to invoke a pakks file without unpakking it into the original file structure, use `unpakk`:
 ```py
-    with open("./outputfile.pakk", "rb") as in_file:
-        pakk = unpakk(key, in_file)
+with open("./outputfile.pakk", "rb") as in_file:
+    pakk = unpakk(key, in_file)
 
-    for key, blob in pakk.blobs.items():
-        print(f"{key}: {blob.name}")
+for key, blob in pakk.blobs.items():
+    print(f"{key}: {blob.name}")
 ```
 
 ### API
