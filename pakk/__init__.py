@@ -369,7 +369,6 @@ def pakk_files(key, files: List[str], destination: Union[io.BufferedIOBase, str]
                     chunk += b"\x00" * (16 - len(chunk) % 16)
 
                 encrypted = encryptor.encrypt(chunk)
-                print(f"expected bytes for {filename}: {encrypted}")
                 out_file.write(encrypted)
 
     if isinstance(destination, str):
