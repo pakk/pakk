@@ -314,7 +314,7 @@ def unpakk_bytes(key, data: io.BufferedIOBase) -> List[bytes]:
 
     return output
 
-def pakk_files(key, files: List[str], destination: Union[io.BufferedIOBase, str], chunksize=64*1024):
+def pakk_files(key, files: List[str], pakked_prefix: str, destination: Union[io.BufferedIOBase, str], chunksize=64*1024):
     """Encrypt and pakk specified files and folders into a single buffered output.
 
     .. note::
@@ -355,6 +355,8 @@ def pakk_files(key, files: List[str], destination: Union[io.BufferedIOBase, str]
     out_file.write(struct.pack(f">Q{AES.block_size}sI", PAKK_MAGIC_NUMBER, init_vector, len(file_paths)))
 
     for filename in file_paths:
+        if pakked_prefix:
+            filename = filename[len(pakked_prefix):]
         filename_bytes = filename.encode("utf-8")
 
         # file name length, file name, and file size
